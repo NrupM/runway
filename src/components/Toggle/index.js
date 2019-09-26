@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { colours, fontSize, fontFamily } from '../../theme/airways';
+import { KEY_CODE_TAB, KEY_CODE_ENTER, KEY_CODE_SPACE } from '../../constants/keyCodes';
 
 const SELECTORS = {
   REACT_SWITCH: {
@@ -117,41 +118,46 @@ class Toggle extends Component {
     checked: false
   };
 
-  handleChange = () => {
-    if (Toggle.isControlled(this.props)) {
-      this.props.onChange();
-    } else {
-      const update = !this.state.checked; // eslint-disable-line
-      this.setState({ checked: update }, () => this.props.onChange(update));
+  handleChange = event => {
+    console.log('herro ...', event)
+    const { keyCode } = event;
+
+
+    if (keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE) {
+      console.log(" ... keycode", event);
+      event.preventDefault();
+      event.stopPropagation();
+
+      console.log('... keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE');
+      if (Toggle.isControlled(this.props)) {
+        this.props.onChange();
+        console.log('... if (Toggle.isControlled(this.props)) {');
+      } else {
+        const update = !this.state.checked; // eslint-disable-line
+        this.setState({ checked: update }, () => this.props.onChange(update));
+        console.log('... serState => const update = !this.state.checked;');
+      }
     }
+    console.log('... outside of any conditions in handleChange', keyCode);
   };
 
   getCheckedState = () =>
     Toggle.isControlled(this.props) ? this.props.checked : this.state.checked;
 
-  renderLabel = () => {
-    const { id, label } = this.props;
-    return (
-      // eslint-disable-next-line jsx-a11y/label-has-for
-      <label htmlFor={id}>
-        <LabelText>{label}</LabelText>
-      </label>
-    );
-  };
-
   renderSwitch = () => {
     const { id, handleSize, height, width } = this.props;
-
     return (
       <Switch
+        onChange={event => this.handleChange(event)}
+        // onKeyDown={this.handleChange}
         checked={this.getCheckedState()}
-        onChange={this.handleChange}
         offColor={colours.darkerGrey}
         onColor={colours.highlights}
         handleDiameter={handleSize}
         offHandleColor={colours.dullGrey}
         onHandleColor={colours.white}
         boxShadow="0px 0px 1px 0px rgba(0, 0, 0, 0.3)"
+        // activeBoxShadow={null}
         uncheckedIcon={false}
         checkedIcon={false}
         height={height}
@@ -165,20 +171,29 @@ class Toggle extends Component {
   render = () => {
     const {
       containerClassName = 'react-toggle-container',
-      spaceBetween
+      spaceBetween,
+      id,
+      label
     } = this.props;
     return (
       <LocalStylesInjector
         containerClassName={containerClassName}
         checked={this.getCheckedState()}
         spaceBetween={spaceBetween}
+        className="chillin-like-a-toggle"
       >
         {/* eslint-disable-next-line jsx-a11y/label-has-for */}
-        {this.renderLabel()}
-        {this.renderSwitch()}
+        <label
+          htmlFor={id}
+          tabIndex="0"
+          // onKeydown={event => this.handleChange(event)}
+          // onClick={event => this.handleChange(event)}
+        >
+          <LabelText>{label}</LabelText>
+          {this.renderSwitch()}
+        </label>
       </LocalStylesInjector>
     );
   };
 }
-
 export default Toggle;
