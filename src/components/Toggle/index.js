@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Switch from 'react-switch';
 import { colours, fontSize, fontFamily } from '../../theme/airways';
-import { KEY_CODE_TAB, KEY_CODE_ENTER, KEY_CODE_SPACE } from '../../constants/keyCodes';
+import {
+  KEY_CODE_TAB,
+  KEY_CODE_ENTER,
+  KEY_CODE_SPACE
+} from '../../constants/keyCodes';
 
 const SELECTORS = {
   REACT_SWITCH: {
@@ -119,25 +123,26 @@ class Toggle extends Component {
   };
 
   handleChange = event => {
-    console.log('herro ...', event)
+    console.log('herro ...', event);
     const { keyCode } = event;
 
+    // if (keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE) {
+    console.log(' ... keycode', event);
+    // event.preventDefault();
+    // event.stopPropagation();
 
-    if (keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE) {
-      console.log(" ... keycode", event);
-      event.preventDefault();
-      event.stopPropagation();
-
-      console.log('... keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE');
-      if (Toggle.isControlled(this.props)) {
-        this.props.onChange();
-        console.log('... if (Toggle.isControlled(this.props)) {');
-      } else {
-        const update = !this.state.checked; // eslint-disable-line
-        this.setState({ checked: update }, () => this.props.onChange(update));
-        console.log('... serState => const update = !this.state.checked;');
-      }
+    // console.log('... keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE');
+    if (Toggle.isControlled(this.props)) {
+      console.log(1);
+      this.props.onChange();
+      console.log('... if (Toggle.isControlled(this.props)) {');
+    } else {
+      console.log(2);
+      const update = !this.state.checked; // eslint-disable-line
+      this.setState({ checked: update }, () => this.props.onChange(update));
+      console.log('... serState => const update = !this.state.checked;');
     }
+    // }
     console.log('... outside of any conditions in handleChange', keyCode);
   };
 
@@ -186,7 +191,7 @@ class Toggle extends Component {
         <label
           htmlFor={id}
           tabIndex="0"
-          // onKeydown={event => this.handleChange(event)}
+          onKeydown={() => this.handleChange(true)}
           // onClick={event => this.handleChange(event)}
         >
           <LabelText>{label}</LabelText>
