@@ -122,27 +122,31 @@ class Toggle extends Component {
     checked: false
   };
 
-  handleChange = event => {
+  handleChange = (val, event) => {
     console.log('herro ...', event);
     const { keyCode } = event;
 
-    // if (keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE) {
-    console.log(' ... keycode', event);
-    // event.preventDefault();
-    // event.stopPropagation();
+    if (
+      keyCode === KEY_CODE_ENTER ||
+      keyCode === KEY_CODE_SPACE ||
+      event.isClicked
+    ) {
+      console.log(' ... keycode', event);
+      // event.preventDefault();
+      // event.stopPropagation();
 
-    // console.log('... keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE');
-    if (Toggle.isControlled(this.props)) {
-      console.log(1);
-      this.props.onChange();
-      console.log('... if (Toggle.isControlled(this.props)) {');
-    } else {
-      console.log(2);
-      const update = !this.state.checked; // eslint-disable-line
-      this.setState({ checked: update }, () => this.props.onChange(update));
-      console.log('... serState => const update = !this.state.checked;');
+      // console.log('... keyCode === KEY_CODE_ENTER || keyCode === KEY_CODE_SPACE');
+      if (Toggle.isControlled(this.props)) {
+        console.log(1);
+        this.props.onChange();
+        console.log('... if (Toggle.isControlled(this.props)) {');
+      } else {
+        console.log(2);
+        const update = !this.state.checked; // eslint-disable-line
+        this.setState({ checked: update }, () => this.props.onChange(update));
+        console.log('... serState => const update = !this.state.checked;');
+      }
     }
-    // }
     console.log('... outside of any conditions in handleChange', keyCode);
   };
 
@@ -153,7 +157,7 @@ class Toggle extends Component {
     const { id, handleSize, height, width } = this.props;
     return (
       <Switch
-        onChange={event => this.handleChange(event)}
+        onChange={value => this.handleChange(value, { isClick: true })}
         // onKeyDown={this.handleChange}
         checked={this.getCheckedState()}
         offColor={colours.darkerGrey}
@@ -191,7 +195,7 @@ class Toggle extends Component {
         <label
           htmlFor={id}
           tabIndex="0"
-          onKeydown={() => this.handleChange(true)}
+          onKeydown={$event => this.handleChange(true, $event)}
           // onClick={event => this.handleChange(event)}
         >
           <LabelText>{label}</LabelText>
