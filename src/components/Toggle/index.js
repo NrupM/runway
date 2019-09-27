@@ -129,7 +129,7 @@ class Toggle extends Component {
     if (
       keyCode === KEY_CODE_ENTER ||
       keyCode === KEY_CODE_SPACE ||
-      event.isClicked
+      event.isClick
     ) {
       console.log(' ... keycode', event);
       // event.preventDefault();
@@ -159,6 +159,7 @@ class Toggle extends Component {
       <Switch
         onChange={value => this.handleChange(value, { isClick: true })}
         // onKeyDown={this.handleChange}
+        tabIndex={-1}
         checked={this.getCheckedState()}
         offColor={colours.darkerGrey}
         onColor={colours.highlights}
